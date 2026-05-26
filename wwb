@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Tripro - Smart Garden 🌱</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Nunito:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(180deg, #e0f2ff 0%, #d8f9ff 50%, #ffddec 100%);
+            --primary-blue: #a5d8ff;
+            --primary-pink: #ffdce8;
+            --accent-purple: #e5dbff;
+            --text-main: #5a5a7a;
+            --radius: 30px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+        }
+
+        .wrapper { width: 100%; max-width: 500px; }
+
+        .header-logo { text-align: center; margin-bottom: 20px; }
+        .header-logo img { width: 220px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1)); }
+
+        .status-badge { position: fixed; top: 10px; right: 10px; z-index: 100; }
+        .s-badge { background: white; padding: 5px 12px; border-radius: 15px; font-size: 10px; font-weight: 800; margin-bottom: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .online { color: #22c55e; border: 1px solid #22c55e; }
+
+        .card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 2px solid white;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.05);
+        }
+
+        .card-title { font-weight: 800; font-size: 14px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+
+        input { 
+            width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; 
+            border: 1px solid #eee; background: rgba(255,255,255,0.8); font-size: 13px; 
+        }
+
+        .btn { 
+            width: 100%; padding: 12px; border-radius: 20px; border: none; font-weight: 800; 
+            cursor: pointer; transition: 0.3s; margin-top: 5px;
+        }
+        .btn-fb { background: #8ba8cc; color: white; }
+        .btn-ble { background: #ffc2d4; color: white; }
+        .btn-off { background: #fce4ec; color: #ff85a2; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        .sensor-display { text-align: center; padding: 20px 0; }
+        .sensor-val { font-family: 'Space Mono', monospace; font-size: 2.5em; font-weight: 900; }
+        .sensor-unit { font-size: 0.5em; }
+
+        .relay-status {
+            background: var(--accent-purple); border-radius: var(--radius);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 180px;
+        }
+        .relay-icon { font-size: 4em; color: #fff; margin-bottom: 10px; transition: 0.5s; }
+
+        .mode-toggle { display: flex; justify-content: space-between; align-items: center; padding: 15px; }
+        .m-btn { padding: 10px 20px; border-radius: 15px; border: none; font-weight: 800; cursor: pointer; }
+        .m-btn.active { background: #b8e2f2; color: #4a90e2; }
+
+        .manual-controls { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-on { background: #e3f2fd; color: #1976d2; }
+        .btn-stop { background: #ffebee; color: #d32f2f; }
+
+        .terminal-container { background: #f2e5f5; border-radius: var(--radius); padding: 20px; }
+        .log-box { height: 120px; overflow-y: auto; font-size: 11px; font-family: 'Space Mono', monospace; color: #7b1fa2; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="status-badge">
+    <div id="status-bt" class="s-badge">BT Offline</div>
+    <div id="status-fb" class="s-badge">FB Offline</div>
+</div>
+
+<div class="wrapper">
+    <div class="header-logo">
+        <img src="https://i.ibb.co/Lzr9xN6/supertripro-logo.png" alt="Super Tripro Logo"> <h2 style="font-weight: 900; color: #5a5a7a; font-size: 1.5em; margin-top: -10px;">Eight Garden</h2>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Firebase Cloud Sync</div>
+        <input type="password" id="fb-apiKey" placeholder="API KEY">
+        <input type="text" id="fb-dbUrl" placeholder="DATABASE URL">
+        <input type="text" id="fb-path" value="smarthome/ruangan1">
+        <button class="btn btn-fb" id="btn-connect-fb">Connect to Firebase</button>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Micro:Bit Bluetooth</div>
+        <p style="font-size: 11px; margin-bottom: 10px;">
